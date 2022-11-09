@@ -129,22 +129,54 @@ module.exports = {
     goerli: {
       url: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161", // public infura endpoint
       chainId: 5,
-      accounts: accounts(),
+      gas: 462990743,
+      gasPrice: 462990743,
+      accounts: {
+        mnemonic: "frost drip burst quality course embrace during box step novel also multiply",
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 20,
+        passphrase: "",
+      }
     },
+
     'bsc-testnet': {
       url: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
       chainId: 97,
-      accounts: accounts(),
+      accounts: {
+        mnemonic: "potato occur pigeon produce exhibit pride saddle obey time amateur hover crisp",
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 20,
+        passphrase: "",
+      }
     },
     fuji: {
       url: `https://api.avax-test.network/ext/bc/C/rpc`,
       chainId: 43113,
-      accounts: accounts(),
+      accounts: {
+        mnemonic: "frost drip burst quality course embrace during box step novel also multiply",
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 20,
+        passphrase: "",
+      }
     },
+    // fuji: {
+    //   url: `HTTP://127.0.0.1:7545`,
+    //   chainId: 5777,
+    //   accounts: accounts(),
+    // },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com/",
       chainId: 80001,
-      accounts: accounts(),
+      accounts: {
+        mnemonic: "potato occur pigeon produce exhibit pride saddle obey time amateur hover crisp",
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 20,
+        passphrase: "",
+      }
     },
     'arbitrum-goerli': {
       url: `https://goerli-rollup.arbitrum.io/rpc/`,
@@ -159,7 +191,13 @@ module.exports = {
     'fantom-testnet': {
       url: `https://rpc.testnet.fantom.network/`,
       chainId: 4002,
-      accounts: accounts(),
+      accounts: {
+        mnemonic: "frost drip burst quality course embrace during box step novel also multiply",
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 20,
+        passphrase: "",
+      }
     }
   }
 };

@@ -1,4 +1,4 @@
 {
-  "baseChain": "goerli",
-  "globalSupply" : "1000000"
+  "baseChain": "bsc-testnet",
+  "globalSupply": "1000000"
 }
