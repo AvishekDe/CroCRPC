@@ -1,26 +1,36 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.7;
 pragma abicoder v2;
 import "../interfaces/ILayerZeroEndpoint.sol";
 import "../interfaces/ILayerZeroReceiver.sol";
 import "hardhat/console.sol";
 
-contract LayerZeroDemo1Copy is ILayerZeroReceiver {
+contract Witness is ILayerZeroReceiver {
     event ReceiveMsg(uint16 _srcChainId, address _from, uint16 _count, bytes _payload);
     ILayerZeroEndpoint public endpoint;
     uint16 public messageCount;
     bytes public message;
+    uint8 public participantscount;
+    mapping(address => bytes) public proofs;
+    bool public app;
 
     constructor(address _endpoint) {
         endpoint = ILayerZeroEndpoint(_endpoint);
+        app = false;
+    }
+
+    function setParticipantCount(uint8 _pc) public {
+        participantscount = _pc;
     }
 
     function sendMsg(
         uint16 _dstChainId,
         bytes calldata _destination,
+        bytes calldata _src,
         bytes calldata payload
     ) public payable {
-        endpoint.send{value: msg.value}(_dstChainId, _destination, payload, payable(msg.sender), address(this), bytes(""));
+        bytes memory remoteAndLocalAddresses = abi.encodePacked(_destination, _src);
+        endpoint.send{value: msg.value}(_dstChainId, remoteAndLocalAddresses, payload, payable(msg.sender), address(this), bytes(""));
     }
 
     function lzReceive(
@@ -39,6 +49,12 @@ contract LayerZeroDemo1Copy is ILayerZeroReceiver {
         }
         message = _payload;
         messageCount += 1;
+        proofs[from] = message;
+        if (messageCount == participantscount) {
+            app = true;
+        } else {
+            app = false;
+        }
         emit ReceiveMsg(_srcChainId, from, messageCount, message);
     }
 

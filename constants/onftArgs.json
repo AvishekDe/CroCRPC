@@ -14,5 +14,9 @@
   "mumbai": {
     "startMintId": 31,
     "endMintId": 40
+  },
+  "fantom-testnet": {
+    "startMintId": 41,
+    "endMintId": 50
   }
 }
