@@ -16,14 +16,14 @@ contract WitnessNetworkCoordinator is ILayerZeroReceiver {
         REFUND_AUTHORIZED
     }
     address[] public pk;
-    uint32 public multisign;
+    bytes32 public multisign;
     State public state;
     address[] public headers;
 
     constructor(
         address _endpoint,
         address[] memory _pk,
-        uint32 _multisign,
+        bytes32 _multisign,
         address[] memory _headers
     ) {
         endpoint = ILayerZeroEndpoint(_endpoint);
