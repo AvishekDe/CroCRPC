@@ -19,6 +19,7 @@ contract AtomicSwap is ILayerZeroReceiver {
     address public receiver;
     uint32 public asset;
     State public state;
+    bytes public memberpayload;
 
     //Commitment Schemes - rd, rf
 
@@ -54,22 +55,12 @@ contract AtomicSwap is ILayerZeroReceiver {
         return true;
     }
 
-    function sendMsg(
-        uint16 _dstChainId,
-        bytes calldata _destination,
-        bytes calldata _src,
-        bytes calldata payload
-    ) public payable {
+    function sendMsg(uint16 _dstChainId, bytes calldata _destination, bytes calldata _src, bytes calldata payload) public payable {
         bytes memory remoteAndLocalAddresses = abi.encodePacked(_destination, _src);
         endpoint.send{value: msg.value}(_dstChainId, remoteAndLocalAddresses, payload, payable(msg.sender), address(this), bytes(""));
     }
 
-    function lzReceive(
-        uint16 _srcChainId,
-        bytes memory _from,
-        uint64,
-        bytes memory _payload
-    ) external override {
+    function lzReceive(uint16 _srcChainId, bytes memory _from, uint64, bytes memory _payload) external override {
         require(msg.sender == address(endpoint));
         address from;
         assembly {
@@ -78,17 +69,12 @@ contract AtomicSwap is ILayerZeroReceiver {
         if (keccak256(abi.encodePacked((_payload))) == keccak256(abi.encodePacked((bytes10("ff"))))) {
             endpoint.receivePayload(1, bytes(""), address(0x0), 1, 1, bytes(""));
         }
+        memberpayload = _payload;
         emit ReceiveMsg(_srcChainId, from, _payload);
     }
 
     // Endpoint.sol estimateFees() returns the fees for the message
-    function estimateFees(
-        uint16 _dstChainId,
-        address _userApplication,
-        bytes calldata _payload,
-        bool _payInZRO,
-        bytes calldata _adapterParams
-    ) external view returns (uint nativeFee, uint zroFee) {
+    function estimateFees(uint16 _dstChainId, address _userApplication, bytes calldata _payload, bool _payInZRO, bytes calldata _adapterParams) external view returns (uint nativeFee, uint zroFee) {
         return endpoint.estimateFees(_dstChainId, _userApplication, _payload, _payInZRO, _adapterParams);
     }
 }

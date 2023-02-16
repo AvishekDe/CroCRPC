@@ -4,23 +4,23 @@ const hre = require("hardhat");
 async function main() {
     const LayerZeroDemo1 = await hre.ethers.getContractFactory("LayerZeroDemo1");
     const layerZeroDemo1 = await LayerZeroDemo1.attach(
-        "0x5A70EDdE9E4a80CF8Ee055C5ffEA6d9892Dc5f12"
+        "0x888BA929487EfBC5cc7F07B26315Ecd51155CAe6"
     );
     const fees = await layerZeroDemo1.estimateFees(
         10109,
-        "0x88C05b7D506578d028773fd7938e123315e16DFC",
-        formatBytes32String("LayerZero Demo Message Avishek"),
+        "0xf72646a049D6d3C9cfC4F1F3eC2161c89eF7fCD0",
+        formatBytes32String("LayerZero Demo Message Divy"),
         false,
         []
     );
     console.log(ethers.utils.formatEther(fees[0].toString()));
-    await layerZeroDemo1.sendMsg(
+    console.log(await layerZeroDemo1.sendMsg(
         10109,
-        "0x88C05b7D506578d028773fd7938e123315e16DFC",
-        "0x5A70EDdE9E4a80CF8Ee055C5ffEA6d9892Dc5f12",
-        formatBytes32String("LayerZero Demo Message Avishek"),
-        { value: ethers.utils.parseEther("1") }
-    );
+        "0xf72646a049D6d3C9cfC4F1F3eC2161c89eF7fCD0",
+        "0x888BA929487EfBC5cc7F07B26315Ecd51155CAe6",
+        formatBytes32String("LayerZero Demo Message Divy"),
+        { value: ethers.utils.parseEther("0.000087") }
+    ));
 }
 main().catch((error) => {
     console.error(error);

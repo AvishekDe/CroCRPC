@@ -149,7 +149,9 @@ module.exports = {
         initialIndex: 0,
         count: 20,
         passphrase: "",
-      }
+      },
+      gasPrice: 20e9,
+      gas: 25e6,
     },
     fuji: {
       url: `https://api.avax-test.network/ext/bc/C/rpc`,
