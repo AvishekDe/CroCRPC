@@ -13,7 +13,7 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
     let wnc = await deploy(
         "WitnessNetworkCoordinator", {
         from: deployer,
-        args: [endpointAddr, [], "0x266550babbb7bd394ab653e15b80471735127d82e68a76fdc2dd7dadcfe667d8", []],
+        args: [endpointAddr, 2, [], "0x266550babbb7bd394ab653e15b80471735127d82e68a76fdc2dd7dadcfe667d8", []],
         log: true,
         waitConfirmations: 1,
     })

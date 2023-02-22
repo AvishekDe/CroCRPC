@@ -16,6 +16,8 @@ contract WitnessNetworkCoordinator is ILayerZeroReceiver {
         REDEEM_AUTHORIZED,
         REFUND_AUTHORIZED
     }
+
+    uint public participants;
     address[] public pk;
     uint16[] public chain_ids;
     bytes32 public multisign;
@@ -23,8 +25,9 @@ contract WitnessNetworkCoordinator is ILayerZeroReceiver {
     address[] public headers;
     string public receivedMsg;
 
-    constructor(address _endpoint, address[] memory _pk, bytes32 _multisign, address[] memory _headers) {
+    constructor(address _endpoint, uint _participants, address[] memory _pk, bytes32 _multisign, address[] memory _headers) {
         endpoint = ILayerZeroEndpoint(_endpoint);
+        participants = _participants;
         pk = _pk;
         multisign = _multisign;
         state = State.PUBLISHED;
@@ -32,27 +35,27 @@ contract WitnessNetworkCoordinator is ILayerZeroReceiver {
     }
 
     function multiCastState() public payable {
-        for (uint i = 0; i < 2; i++) {
-            address a = pk[i]; //0x71BDef2fA732FAEd466F928f1A3262ceFcE9e46A;
-            uint16 ci = chain_ids[i]; //10106;
-            // bytes memory remoteAndLocalAddresses = abi.encodePacked(abi.encodePacked(a), abi.encodePacked(address(this)));
-            // endpoint.send{value: msg.value}(chain_ids[i], remoteAndLocalAddresses, bytes("hawaii"), payable(msg.sender), address(0x0), bytes(""));
-            while (endpoint.isSendingPayload()) {}
-            sendMsg(ci, abi.encodePacked(a), abi.encodePacked(address(this)), bytes("stars"));
-            emit SentMsg(ci, a, bytes("sentnow"));
+        for (uint i = 0; i < participants; i++) {
+            address a = pk[i];
+            uint16 ci = chain_ids[i];
+            while (endpoint.isSendingPayload()) {} // Avoids the reentrancy guard
+            sendMsg(ci, abi.encodePacked(a), abi.encodePacked(address(this)), abi.encodePacked(uint(state)));
+            emit SentMsg(ci, a, bytes("State Sent to Participants"));
         }
     }
 
     function authorizeRedeem(uint32 _evidence) external {
-        if (state == State.PUBLISHED && verifyContracts(_evidence)) {
+        if (state == State.PUBLISHED && pk.length == participants && verifyContracts(_evidence)) {
             state = State.REDEEM_AUTHORIZED;
         }
+        multiCastState();
     }
 
     function authorizeRefund() external {
         if (state == State.PUBLISHED) {
             state = State.REFUND_AUTHORIZED;
         }
+        multiCastState();
     }
 
     function verifyContracts(uint32 _evidence) internal returns (bool valid) {
@@ -71,7 +74,7 @@ contract WitnessNetworkCoordinator is ILayerZeroReceiver {
 
     function sendMsg(uint16 _dstChainId, bytes memory _destination, bytes memory _src, bytes memory payload) public payable {
         bytes memory remoteAndLocalAddresses = abi.encodePacked(_destination, _src);
-        endpoint.send{value: msg.value / 3}(_dstChainId, remoteAndLocalAddresses, payload, payable(msg.sender), address(this), bytes(""));
+        endpoint.send{value: msg.value / (participants + 1)}(_dstChainId, remoteAndLocalAddresses, payload, payable(msg.sender), address(this), bytes(""));
     }
 
     function lzReceive(uint16 _srcChainId, bytes memory _from, uint64, bytes memory _payload) external override {
