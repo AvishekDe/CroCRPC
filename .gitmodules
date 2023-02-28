@@ -1,0 +1,3 @@
+[submodule "Seriality"]
+	path = Seriality
+	url = git@github.com:pouladzade/Seriality.git
