@@ -4,30 +4,31 @@ const hre = require("hardhat");
 async function main() {
     const LayerZeroDemo1 = await hre.ethers.getContractFactory("Receiver");
     const layerZeroDemo1 = await LayerZeroDemo1.attach(
-        "0x7eC776dcED598Dc6baA18c5656CdB9603Ce5705B"
+        "0x7055B1eAE57F6156507ff541B75CFAB9aB2E7a6B"
     );
 
     const intervalID = setInterval(async () => {
-        var ret = await layerZeroDemo1.ret();
-        if (ret != 0) {
-            console.log("got return value=" + ret);
+        var results = await layerZeroDemo1.countPending();
+        if (results > 0) {
+            console.log(results + " results left to process");
+            const [addr, chainID, ans] = await layerZeroDemo1.getFirstResult();
+            await layerZeroDemo1.deleteFirstResult();
 
             const fees = await layerZeroDemo1.estimateFees(
-                10102,
-                "0x517F4Be8DFD983f67D401Ef68F6CF18090337162",
-                formatBytes32String(ret.toString()),
+                chainID,
+                addr,
+                formatBytes32String(ans.toNumber().toString()),
                 false,
                 []
             );
             console.log(ethers.utils.formatEther(fees[0].toString()));
             console.log(await layerZeroDemo1.sendMsg(
-                10102,
-                "0x517F4Be8DFD983f67D401Ef68F6CF18090337162",
-                "0x7eC776dcED598Dc6baA18c5656CdB9603Ce5705B",
-                formatBytes32String(ret.toString()),
-                { value: fees[0] }
+                chainID,
+                addr,
+                "0x7055B1eAE57F6156507ff541B75CFAB9aB2E7a6B",
+                formatBytes32String(ans.toNumber().toString()),
+                { value: ethers.utils.parseEther("1") }
             ));
-            clearInterval(intervalID);
         }
         else {
             console.log("...");

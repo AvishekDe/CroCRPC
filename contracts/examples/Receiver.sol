@@ -15,6 +15,10 @@ contract Receiver is ILayerZeroReceiver, Seriality {
     int public ret;
     string public rec;
 
+    mapping(address => int) public pendingResultMap;
+    address[] public pendingAddresses;
+    uint16[] public srcChainIDs;
+
     constructor(address _endpoint) {
         endpoint = ILayerZeroEndpoint(_endpoint);
     }
@@ -28,7 +32,34 @@ contract Receiver is ILayerZeroReceiver, Seriality {
         ret = 0;
     }
 
-    function parsePayload(bytes memory _payload) public {
+    function countPending() public view returns (uint) {
+        return pendingAddresses.length;
+    }
+
+    function deleteFirstResult() external {
+        //delete
+        uint pendingResults = countPending();
+        address a = pendingAddresses[0];
+        for (uint i = 0; i < pendingResults - 1; i++) {
+            pendingAddresses[i] = pendingAddresses[i + 1];
+            srcChainIDs[i] = srcChainIDs[i + 1];
+        }
+
+        delete pendingResultMap[a];
+        pendingAddresses.pop();
+        srcChainIDs.pop();
+    }
+
+    function getFirstResult() external view returns (address, uint16, int) {
+        uint pendingResults = countPending();
+        require(pendingResults > 0);
+        address a = pendingAddresses[0];
+        uint16 cid = srcChainIDs[0];
+        int ans = pendingResultMap[a];
+        return (a, cid, ans);
+    }
+
+    function parsePayload(bytes memory _payload) public returns (int) {
         uint offset = 200;
         string memory temp = new string(32);
         string memory fn = new string(32);
@@ -47,17 +78,19 @@ contract Receiver is ILayerZeroReceiver, Seriality {
 
         emit ParsedMsg(op1, op2, fn);
         ExtLibrary el = ExtLibrary(0x12C9fEB41E2Bc14937573aC02C41C0065e7F2AF6);
+        int ans = 0;
 
         if (keccak256(abi.encodePacked(fn)) == keccak256(abi.encodePacked("sum"))) {
-            ret = el.getSum(op1, op2);
+            ans = el.getSum(op1, op2);
         } else if (keccak256(abi.encodePacked(fn)) == keccak256(abi.encodePacked("diff"))) {
-            ret = el.getDiff(op1, op2);
+            ans = el.getDiff(op1, op2);
         } else {
             // prod
-            ret = el.getDiff(op1, op2);
+            ans = el.getProduct(op1, op2);
         }
 
         emit ExternalCall(op1, op2, ret);
+        return ans;
     }
 
     function lzReceive(uint16 _srcChainId, bytes memory _from, uint64, bytes memory _payload) external override {
@@ -69,12 +102,10 @@ contract Receiver is ILayerZeroReceiver, Seriality {
         if (keccak256(abi.encodePacked((_payload))) == keccak256(abi.encodePacked((bytes10("ff"))))) {
             endpoint.receivePayload(1, bytes(""), address(0x0), 1, 1, bytes(""));
         }
-        // rec = string(_payload);
-        // string memory statecheck = "statecheck";
-        // if (keccak256(abi.encodePacked(statecheck)) == keccak256(abi.encodePacked(string(abi.encodePacked(_payload))))) {
-        //     ret = "hellofromtheotherside";
-        // }
-        parsePayload(_payload);
+        int ans = parsePayload(_payload);
+        pendingAddresses.push(from);
+        pendingResultMap[from] = ans;
+        srcChainIDs.push(_srcChainId);
         emit ReceiveMsg(_srcChainId, from, _payload);
     }
 

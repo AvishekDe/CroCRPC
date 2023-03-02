@@ -28,9 +28,9 @@ contract Sender is ILayerZeroReceiver, Seriality {
         // Mandatory args = FunctionName, ...Args (Mode to be supported later)
         bytes memory buffer = new bytes(200);
         string memory fn = new string(32);
-        fn = "sum";
-        int op1 = 33;
-        int op2 = 48;
+        fn = "diff";
+        int op1 = 32;
+        int op2 = 11;
 
         // Serializing
         uint offset = 200; // size of maximum variable -- to be coordinated
