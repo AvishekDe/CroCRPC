@@ -4,37 +4,37 @@ const hre = require("hardhat");
 async function main() {
     const LayerZeroDemo1 = await hre.ethers.getContractFactory("Receiver");
     const layerZeroDemo1 = await LayerZeroDemo1.attach(
-        "0x331F27Ca74D2d0636335e636F1EBd9257641887E"
+        "0x7055B1eAE57F6156507ff541B75CFAB9aB2E7a6B"
     );
 
     const intervalID = setInterval(async () => {
-        var ret = await layerZeroDemo1.ret();
-        if (ret !== "") {
-            console.log("got return value=" + ret);
+        var results = await layerZeroDemo1.countPending();
+        if (results > 0) {
+            console.log(results + " results left to process");
+            const [addr, chainID, ans] = await layerZeroDemo1.getFirstResult();
+            await layerZeroDemo1.deleteFirstResult();
 
             const fees = await layerZeroDemo1.estimateFees(
-                10102,
-                "0x77a011a65F32573C6B60b83bF785bA97c2285528",
-                formatBytes32String("taylor"),
+                chainID,
+                addr,
+                formatBytes32String(ans.toNumber().toString()),
                 false,
                 []
             );
             console.log(ethers.utils.formatEther(fees[0].toString()));
             console.log(await layerZeroDemo1.sendMsg(
-                10102,
-                "0x77a011a65F32573C6B60b83bF785bA97c2285528",
-                "0x331F27Ca74D2d0636335e636F1EBd9257641887E",
-                "0x7461796c6f72",
-                { value: fees[0] }
+                chainID,
+                addr,
+                "0x7055B1eAE57F6156507ff541B75CFAB9aB2E7a6B",
+                formatBytes32String(ans.toNumber().toString()),
+                { value: ethers.utils.parseEther("1") }
             ));
-            clearInterval(intervalID);
         }
         else {
             console.log("...");
         }
 
     }, 7000);
-    console.log("Finished");
 }
 main().catch((error) => {
     console.error(error);

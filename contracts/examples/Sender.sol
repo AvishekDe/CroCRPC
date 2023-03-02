@@ -4,15 +4,50 @@ pragma abicoder v2;
 import "../interfaces/ILayerZeroEndpoint.sol";
 import "../interfaces/ILayerZeroReceiver.sol";
 import "hardhat/console.sol";
+import "../../Seriality/src/Seriality.sol";
 
-contract Sender is ILayerZeroReceiver {
+contract Sender is ILayerZeroReceiver, Seriality {
     event ReceiveMsg(uint16 _srcChainId, address _from, bytes _payload);
+    event SentMsg(uint16 _destChainID, address _coordinator, bytes _payload);
 
     ILayerZeroEndpoint public endpoint;
+    address public coordinator;
     string public ret;
+    uint16 public destChainID;
 
     constructor(address _endpoint) {
         endpoint = ILayerZeroEndpoint(_endpoint);
+    }
+
+    function updateCoordinator(address _coordinator, uint16 _destChainID) external {
+        coordinator = _coordinator;
+        destChainID = _destChainID;
+    }
+
+    function client() external payable {
+        // Mandatory args = FunctionName, ...Args (Mode to be supported later)
+        bytes memory buffer = new bytes(200);
+        string memory fn = new string(32);
+        fn = "diff";
+        int op1 = 32;
+        int op2 = 11;
+
+        // Serializing
+        uint offset = 200; // size of maximum variable -- to be coordinated
+
+        intToBytes(offset, op2, buffer);
+        offset -= sizeOfInt(256);
+
+        intToBytes(offset, op1, buffer);
+        offset -= sizeOfInt(256);
+
+        stringToBytes(offset, bytes(fn), buffer);
+        offset -= sizeOfString(fn);
+
+        // Send buffer as payload
+        while (endpoint.isSendingPayload()) {} // Avoids the reentrancy guard
+        sendMsg(destChainID, abi.encodePacked(coordinator), abi.encodePacked(address(this)), buffer);
+        emit SentMsg(destChainID, coordinator, buffer);
     }
 
     function sendMsg(uint16 _dstChainId, bytes memory _destination, bytes memory _src, bytes memory payload) public payable {

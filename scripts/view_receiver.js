@@ -3,16 +3,18 @@ const { ethers } = require("ethers");
 async function main() {
     const LayerZeroDemo1 = await hre.ethers.getContractFactory("Receiver");
     const layerZeroDemo1 = await LayerZeroDemo1.attach(
-        "0x331F27Ca74D2d0636335e636F1EBd9257641887E"
+        "0xDF69257894D7087B7d7353b6C5CE9C9BfD4DBb16"
     );
 
-    //await layerZeroDemo1.unsetRet();
-    const rec = await layerZeroDemo1.rec();
-    const ret = await layerZeroDemo1.ret();
-    console.log("rec= " + rec);
-    console.log("ret= " + ret);
-    console.log("ret= " + ret.length);
-    console.log("ret= " + ret === "");
+    var count = await layerZeroDemo1.countPending();
+    var a = await layerZeroDemo1.pendingAddresses(0);
+    var c = await layerZeroDemo1.srcChainIDs(0);
+    var ans = await layerZeroDemo1.pendingResultMap(a);
+    console.log("count=" + count);
+    console.log(a + "->" + c);
+    console.log("ans=" + ans);
+    var response = await layerZeroDemo1.getAndDeleteFirstResult(false);
+    console.log("first=" + ethers.utils.toUtf8String(response.data));
 }
 main().catch((error) => {
     console.error(error);

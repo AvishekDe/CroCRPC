@@ -178,7 +178,7 @@ module.exports = {
         initialIndex: 0,
         count: 20,
         passphrase: "",
-      }
+      },
     },
     'arbitrum-goerli': {
       url: `https://goerli-rollup.arbitrum.io/rpc/`,

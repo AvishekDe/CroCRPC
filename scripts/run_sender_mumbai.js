@@ -17,7 +17,7 @@ async function main() {
     //await layerZeroDemo1.updateCoordinator("0x7055B1eAE57F6156507ff541B75CFAB9aB2E7a6B", 10106);
     console.log(await layerZeroDemo1.coordinator());
     console.log(await layerZeroDemo1.destChainID());
-    //console.log(await layerZeroDemo1.client({ value: fees[0] * 4 }));
+    console.log(await layerZeroDemo1.client({ value: ethers.utils.parseEther("0.4") }));
     // console.log(await layerZeroDemo1.sendMsg(
     //     10106, //chainID
     //     "0x331F27Ca74D2d0636335e636F1EBd9257641887E", //dest SC
