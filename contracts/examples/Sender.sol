@@ -24,13 +24,13 @@ contract Sender is ILayerZeroReceiver, Seriality {
         destChainID = _destChainID;
     }
 
-    function client() external payable {
+    function client(string memory _fn, int _op1, int _op2) external payable {
         // Mandatory args = FunctionName, ...Args (Mode to be supported later)
         bytes memory buffer = new bytes(200);
         string memory fn = new string(32);
-        fn = "diff";
-        int op1 = 32;
-        int op2 = 11;
+        fn = _fn;
+        int op1 = _op1;
+        int op2 = _op2;
 
         // Serializing
         uint offset = 200; // size of maximum variable -- to be coordinated

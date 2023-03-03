@@ -7,9 +7,12 @@ async function main() {
         "0x7055B1eAE57F6156507ff541B75CFAB9aB2E7a6B"
     );
 
+    var alreadyRunning = false;
+
     const intervalID = setInterval(async () => {
         var results = await layerZeroDemo1.countPending();
-        if (results > 0) {
+        if (results > 0 && !alreadyRunning) {
+            alreadyRunning = true;
             console.log(results + " results left to process");
             const [addr, chainID, ans] = await layerZeroDemo1.getFirstResult();
             await layerZeroDemo1.deleteFirstResult();
@@ -29,6 +32,7 @@ async function main() {
                 formatBytes32String(ans.toNumber().toString()),
                 { value: ethers.utils.parseEther("1") }
             ));
+            alreadyRunning = false;
         }
         else {
             console.log("...");
