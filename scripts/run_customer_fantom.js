@@ -15,7 +15,7 @@ async function main() {
     );
     console.log(ethers.utils.formatEther(fees[0].toString()));
     // await layerZeroDemo1.updateBankAddress("0xe38Ccc452de5aCDde02df626e3AaA55cAf793183", 10106);
-    console.log(await layerZeroDemo1.makeDeposit(100, { value: ethers.utils.parseEther("1") }));
+    console.log(await layerZeroDemo1.sendMoney("0x90D6A5fa548e1e99d67C26245175849ebF588915", 33, { value: ethers.utils.parseEther("1") }));
 
 }
 main().catch((error) => {
