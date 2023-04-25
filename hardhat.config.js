@@ -188,7 +188,13 @@ module.exports = {
     'optimism-goerli': {
       url: `https://goerli.optimism.io/`,
       chainId: 420,
-      accounts: accounts(),
+      accounts: {
+        mnemonic: "potato occur pigeon produce exhibit pride saddle obey time amateur hover crisp",
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 20,
+        passphrase: "",
+      },
     },
     'fantom-testnet': {
       url: `https://rpc.testnet.fantom.network/`,
