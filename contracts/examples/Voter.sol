@@ -12,7 +12,6 @@ contract Voter is ILayerZeroReceiver, Seriality {
 
     // Dependencies
     ILayerZeroEndpoint public endpoint;
-    string public ret;
 
     // App specific data members
     mapping(address => bytes) public votingRecord;
