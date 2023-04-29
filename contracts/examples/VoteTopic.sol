@@ -17,7 +17,7 @@ contract VoteTopic is ILayerZeroReceiver, Seriality {
 
     // Needed by the daemon to send back results
     mapping(address => uint16) public chainIDmap;
-    mapping(address => bytes) public pendingResultMap;
+    mapping(address => uint) public pendingResultMap;
     address[] public pendingAddresses;
 
     // App specific data members
@@ -25,7 +25,7 @@ contract VoteTopic is ILayerZeroReceiver, Seriality {
     string[] public options = ["Man City", "Arsenal", "Liverpool", "Man United"];
     uint8[] public voteCounter = [0, 0, 0, 0];
     mapping(address => bool) private participants;
-    mapping(bytes => uint16) public recordedVotes;
+    mapping(uint => uint16) public recordedVotes;
 
     constructor(address _endpoint) {
         endpoint = ILayerZeroEndpoint(_endpoint);
@@ -52,12 +52,12 @@ contract VoteTopic is ILayerZeroReceiver, Seriality {
         pendingAddresses.pop();
     }
 
-    function getFirstResult() external view returns (address, uint16, bytes memory) {
+    function getFirstResult() external view returns (address, uint16, uint) {
         uint pendingResults = countPending();
         require(pendingResults > 0);
         address a = pendingAddresses[0];
         uint16 cid = chainIDmap[a];
-        bytes memory transactionID = pendingResultMap[a];
+        uint transactionID = pendingResultMap[a];
         return (a, cid, transactionID);
     }
 
@@ -70,25 +70,27 @@ contract VoteTopic is ILayerZeroReceiver, Seriality {
         index = bytesToUint16(offset, _payload);
         offset -= sizeOfUint(16);
 
-        bytes memory transactionID = registerVote(from, index);
+        uint transactionID = registerVote(from, index);
 
         pendingAddresses.push(from);
         pendingResultMap[from] = transactionID;
     }
 
-    function registerVote(address from, uint16 index) internal returns (bytes memory) {
-        bytes memory transactionID = bytes("");
+    function genHashCode(address from) internal pure returns (uint) {
+        uint hash = uint(keccak256(abi.encodePacked(from)));
+        return hash % (10 ** 15);
+    }
+
+    function registerVote(address from, uint16 index) internal returns (uint) {
+        uint transactionID = 0;
         if (participants[from] == false) {
             // register vote
             // Generate hidden transaction ID
-            transactionID = abi.encodePacked(keccak256(abi.encodePacked(from)));
+            transactionID = genHashCode(from);
             voteCounter[index]++;
             participants[from] = true;
             recordedVotes[transactionID] = index;
-        } else {
-            transactionID = bytes("Already Recorded");
         }
-
         return transactionID;
     }
 

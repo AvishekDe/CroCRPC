@@ -14,7 +14,7 @@ contract Voter is ILayerZeroReceiver, Seriality {
     ILayerZeroEndpoint public endpoint;
 
     // App specific data members
-    mapping(address => bytes) public votingRecord;
+    mapping(address => string) public votingRecord;
     string public transactionID;
 
     constructor(address _endpoint) {
@@ -49,7 +49,7 @@ contract Voter is ILayerZeroReceiver, Seriality {
             endpoint.receivePayload(1, bytes(""), address(0x0), 1, 1, bytes(""));
         }
         transactionID = string(_payload);
-        votingRecord[from] = _payload;
+        votingRecord[from] = transactionID;
         emit ReceiveMsg(_srcChainId, from, _payload);
     }
 

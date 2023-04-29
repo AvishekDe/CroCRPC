@@ -205,7 +205,7 @@ module.exports = {
         initialIndex: 0,
         count: 20,
         passphrase: "",
-      }
+      },
     }
   }
 };

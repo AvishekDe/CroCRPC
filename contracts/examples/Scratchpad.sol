@@ -2,16 +2,9 @@
 pragma solidity ^0.8.0;
 
 contract Scratchpad {
-    struct Person {
-        int a;
-        int b;
-    }
+    bytes32 public hash;
 
-    function tp() public pure {}
-
-    function test() external view returns (int, int) {
-        tp();
-        Person memory p = Person(3, 5);
-        return (p.a, p.b);
+    function genHash() external {
+        hash = keccak256(abi.encodePacked(address(this)));
     }
 }
