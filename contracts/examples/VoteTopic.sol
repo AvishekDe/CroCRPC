@@ -31,6 +31,12 @@ contract VoteTopic is ILayerZeroReceiver, Seriality {
         endpoint = ILayerZeroEndpoint(_endpoint);
     }
 
+    function clearPendingResults() external {
+        while (countPending() > 0) {
+            deleteFirstResult();
+        }
+    }
+
     function sendMsg(uint16 _dstChainId, bytes memory _destination, bytes memory _src, bytes memory payload) public payable {
         bytes memory remoteAndLocalAddresses = abi.encodePacked(_destination, _src);
         endpoint.send{value: msg.value}(_dstChainId, remoteAndLocalAddresses, payload, payable(msg.sender), address(this), bytes(""));
@@ -40,7 +46,7 @@ contract VoteTopic is ILayerZeroReceiver, Seriality {
         return pendingAddresses.length;
     }
 
-    function deleteFirstResult() external {
+    function deleteFirstResult() public {
         //delete
         uint pendingResults = countPending();
         address a = pendingAddresses[0];

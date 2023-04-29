@@ -8,14 +8,14 @@ async function main() {
     );
     const fees = await layerZeroDemo1.estimateFees(
         10112,
-        "0x9b42A4196CAd84E2Ab7E3f2635532f02D8F1B5ca",
+        "0x00AedC685690DFD34f77B3d12cd16Bf02A087B44",
         formatBytes32String("statecheck"),
         false,
         []
     );
     console.log(ethers.utils.formatEther(fees[0].toString()));
 
-    console.log(await layerZeroDemo1.castVote("0x9b42A4196CAd84E2Ab7E3f2635532f02D8F1B5ca", 10112, 2, { value: ethers.utils.parseEther("0.5") }));
+    console.log(await layerZeroDemo1.castVote("0x00AedC685690DFD34f77B3d12cd16Bf02A087B44", 10112, 2, { value: ethers.utils.parseEther("0.3") }));
 
 }
 main().catch((error) => {

@@ -3,7 +3,7 @@ const { ethers } = require("ethers");
 async function main() {
     const LayerZeroDemo1 = await hre.ethers.getContractFactory("VoteTopic");
     const layerZeroDemo1 = await LayerZeroDemo1.attach(
-        "0xb83A33469C1F3CDA3Acb9d1C586315F4fda80339"
+        "0x00AedC685690DFD34f77B3d12cd16Bf02A087B44"
     );
 
     // console.log(await layerZeroDemo1.recordedVotes('0xb865702177ef98c70d876633e4066fe96932e6898b0374b57041932853945bb0'));
