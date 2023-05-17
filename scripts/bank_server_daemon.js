@@ -4,7 +4,7 @@ const hre = require("hardhat");
 async function main() {
     const LayerZeroDemo1 = await hre.ethers.getContractFactory("Bank");
     const layerZeroDemo1 = await LayerZeroDemo1.attach(
-        "0xe38Ccc452de5aCDde02df626e3AaA55cAf793183"
+        "0x354Ef09C11b315a82c1B7A250132e0E873f6DA70"
     );
 
     var alreadyRunning = false;
@@ -27,9 +27,9 @@ async function main() {
             console.log(await layerZeroDemo1.sendMsg(
                 chainID,
                 addr,
-                "0xe38Ccc452de5aCDde02df626e3AaA55cAf793183",
+                "0x354Ef09C11b315a82c1B7A250132e0E873f6DA70",
                 formatBytes32String(ans.toNumber().toString()),
-                { value: ethers.utils.parseEther("0.0005") }
+                { value: ethers.utils.parseEther("0.03") }
             ));
             await layerZeroDemo1.deleteFirstResult();
             alreadyRunning = false;
@@ -38,7 +38,7 @@ async function main() {
             console.log("...");
         }
 
-    }, 7000);
+    }, 10000);
 }
 main().catch((error) => {
     console.error(error);

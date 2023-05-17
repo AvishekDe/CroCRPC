@@ -2,20 +2,20 @@ const { formatBytes32String } = require("ethers/lib/utils");
 const { ethers } = require("ethers");
 const hre = require("hardhat");
 async function main() {
-    const LayerZeroDemo1 = await hre.ethers.getContractFactory("Customer");
+    const LayerZeroDemo1 = await hre.ethers.getContractFactory("Voter");
     const layerZeroDemo1 = await LayerZeroDemo1.attach(
-        "0xeDa5eCA0bEe4CD122c95FFab974Ef810dC30981a"
+        "0x96805AA0D330aA522eFAea8b19D53C3a8E448a25"
     );
     const fees = await layerZeroDemo1.estimateFees(
         10106,
-        "0x354Ef09C11b315a82c1B7A250132e0E873f6DA70",
+        "0x572EC30c04581DfcA494E76C645d8510A324b573",
         formatBytes32String("statecheck"),
         false,
         []
     );
     console.log(ethers.utils.formatEther(fees[0].toString()));
-    // await layerZeroDemo1.updateBankAddress("0x354Ef09C11b315a82c1B7A250132e0E873f6DA70", 10106);
-    console.log(await layerZeroDemo1.sendMoney("0xC63c0C3ac22F2b765fF28627c5C9ceb2aa42F67A", 50, { value: ethers.utils.parseEther("1") }));
+
+    console.log(await layerZeroDemo1.castVote("0x572EC30c04581DfcA494E76C645d8510A324b573", 10106, 1, { value: ethers.utils.parseEther("1") }));
 
 }
 main().catch((error) => {

@@ -18,6 +18,7 @@ contract Customer is ILayerZeroReceiver, Seriality {
 
     // App specific data members
     string public balance;
+    string public name = "BSC - Brian";
 
     constructor(address _endpoint) {
         endpoint = ILayerZeroEndpoint(_endpoint);

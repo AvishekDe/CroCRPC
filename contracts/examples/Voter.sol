@@ -16,6 +16,7 @@ contract Voter is ILayerZeroReceiver, Seriality {
     // App specific data members
     mapping(address => string) public votingRecord;
     string public transactionID;
+    string public name = "Voter-Mumbai";
 
     constructor(address _endpoint) {
         endpoint = ILayerZeroEndpoint(_endpoint);

@@ -3,7 +3,7 @@ const { ethers } = require("ethers");
 async function main() {
     const LayerZeroDemo1 = await hre.ethers.getContractFactory("Customer");
     const layerZeroDemo1 = await LayerZeroDemo1.attach(
-        "0xC63c0C3ac22F2b765fF28627c5C9ceb2aa42F67A"
+        "0xe68507f17880f9CdAC77184d7c5BB06788919b8a"
     );
 
     const bal = await layerZeroDemo1.balance();

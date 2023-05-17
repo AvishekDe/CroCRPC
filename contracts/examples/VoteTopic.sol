@@ -21,6 +21,7 @@ contract VoteTopic is ILayerZeroReceiver, Seriality {
     address[] public pendingAddresses;
 
     // App specific data members
+    string public name = "Vote-PL";
     string public question = "Who will win Premier League?";
     string[] public options = ["Man City", "Arsenal", "Liverpool", "Man United"];
     uint8[] public voteCounter = [0, 0, 0, 0];

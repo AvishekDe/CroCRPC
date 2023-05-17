@@ -4,7 +4,7 @@ const hre = require("hardhat");
 async function main() {
     const LayerZeroDemo1 = await hre.ethers.getContractFactory("VoteTopic");
     const layerZeroDemo1 = await LayerZeroDemo1.attach(
-        "0x00AedC685690DFD34f77B3d12cd16Bf02A087B44"
+        "0x572EC30c04581DfcA494E76C645d8510A324b573"
     );
 
     var alreadyRunning = false;
@@ -28,9 +28,9 @@ async function main() {
             console.log(await layerZeroDemo1.sendMsg(
                 chainID,
                 addr,
-                "0x00AedC685690DFD34f77B3d12cd16Bf02A087B44",
+                "0x572EC30c04581DfcA494E76C645d8510A324b573",
                 formatBytes32String(transactionID.toNumber().toString()),
-                { value: ethers.utils.parseEther("1") }
+                { value: ethers.utils.parseEther("0.03") }
             ));
             await layerZeroDemo1.deleteFirstResult();
             alreadyRunning = false;

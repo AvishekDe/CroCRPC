@@ -2,20 +2,20 @@ const { formatBytes32String } = require("ethers/lib/utils");
 const { ethers } = require("ethers");
 const hre = require("hardhat");
 async function main() {
-    const LayerZeroDemo1 = await hre.ethers.getContractFactory("Voter");
+    const LayerZeroDemo1 = await hre.ethers.getContractFactory("Customer");
     const layerZeroDemo1 = await LayerZeroDemo1.attach(
-        "0xE91BFcc2A12882aF9CFF75bb048e23Fb8F584892"
+        "0xe68507f17880f9CdAC77184d7c5BB06788919b8a"
     );
     const fees = await layerZeroDemo1.estimateFees(
-        10112,
-        "0x6b7bc100f6715F9D672B2061207E2f6a659Ba3C6",
+        10109,
+        "0xAe698678D03a5a80157fEA976fDF321f1b94e156",
         formatBytes32String("statecheck"),
         false,
         []
     );
     console.log(ethers.utils.formatEther(fees[0].toString()));
-
-    console.log(await layerZeroDemo1.castVote("0x6b7bc100f6715F9D672B2061207E2f6a659Ba3C6", 10132, 1, { value: ethers.utils.parseEther("0.01") }));
+    await layerZeroDemo1.updateBankAddress("0xAe698678D03a5a80157fEA976fDF321f1b94e156", 10109);
+    //console.log(await layerZeroDemo1.makeDeposit(123, { value: ethers.utils.parseEther("0.02") }));
 
 }
 main().catch((error) => {

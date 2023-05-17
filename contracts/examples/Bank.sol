@@ -11,6 +11,9 @@ contract Bank is ILayerZeroReceiver, Seriality {
     event ParsedMsg(int amount, string fn);
     event ExternalCall(int op1, int op2, int ans);
 
+    // Unique identifier - to redeploy contract
+    string public bankname = "Wells Fargo - Fuji";
+
     // Dependencies
     ILayerZeroEndpoint public endpoint;
     int public ret;

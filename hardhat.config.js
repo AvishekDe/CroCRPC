@@ -150,8 +150,7 @@ module.exports = {
         count: 20,
         passphrase: "",
       },
-      gasPrice: 20e9,
-      gas: 25e6,
+      gas: 6000000,
     },
     fuji: {
       url: `https://api.avax-test.network/ext/bc/C/rpc`,
@@ -162,13 +161,9 @@ module.exports = {
         initialIndex: 0,
         count: 20,
         passphrase: "",
-      }
+      },
+      gas: 6000000
     },
-    // fuji: {
-    //   url: `HTTP://127.0.0.1:7545`,
-    //   chainId: 5777,
-    //   accounts: accounts(),
-    // },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com/",
       chainId: 80001,
@@ -179,6 +174,7 @@ module.exports = {
         count: 20,
         passphrase: "",
       },
+      gas: 6000000
     },
     'arbitrum-goerli': {
       url: `https://goerli-rollup.arbitrum.io/rpc/`,
@@ -206,6 +202,7 @@ module.exports = {
         count: 20,
         passphrase: "",
       },
+      gas: 6000000
     }
   }
 };
